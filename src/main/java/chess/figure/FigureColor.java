@@ -19,6 +19,6 @@ public enum FigureColor {
         if (this == White) {
             return Black;
         }
-        throw new Error("T_T");//HARDCODE:
+        throw new IllegalArgumentException("Unexpected Color");
     }
 }

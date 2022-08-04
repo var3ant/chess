@@ -9,7 +9,7 @@ import java.awt.*;
 import java.io.IOException;
 
 public class FieldView extends Component {
-    public final int cellSize = 80;
+    public static final int cellSize = 80;
     public final int panelSize = 640;
     //PlayerModel model = new PlayerModel(panelSize / cellSize, this, FigureColor.White);
     Model model = new Model(panelSize / cellSize, this);

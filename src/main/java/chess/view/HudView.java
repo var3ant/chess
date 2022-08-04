@@ -11,6 +11,7 @@ public class HudView extends JPanel {
         stepsHistory.setRows(39);
         stepsHistory.setColumns(20);
         stepsHistory.setEditable(false);
+        setFocusable(false);
         add(stepsHistory);
     }
 }

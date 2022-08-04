@@ -16,9 +16,6 @@ public class Controller implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        int x = e.getX();
-        int y = e.getY();
-        model.click(x / fieldView.cellSize,y / fieldView.cellSize);
     }
 
     @Override
@@ -28,7 +25,9 @@ public class Controller implements MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        int x = e.getX();
+        int y = e.getY();
+        model.click(x / fieldView.cellSize,y / fieldView.cellSize);
     }
 
     @Override

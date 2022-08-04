@@ -103,7 +103,7 @@ public class Model {
         field.set(7, 1, new Pawn(FigureColor.Black));
     }
 
-    //smells: method smells because there is no selectedplayer.using() in java
+    //smells:
     public void click(int x, int y) {
         if (whoWon != null) {
             return;
@@ -122,7 +122,7 @@ public class Model {
             return;
         }
 
-        Move move = selectedPlayer.findMoveIfAvailable(selectedPlayer.selectedFigure, x, y);// selectedPlayer.selectedFigure.findMoveIfAvailable(field, x, y);
+        Move move = selectedPlayer.findMoveIfAvailable(selectedPlayer.selectedFigure, x, y);
         if (move != null) {
             move.move(selectedPlayer.selectedFigure, field);
             selectedPlayer.selectedFigure = null;

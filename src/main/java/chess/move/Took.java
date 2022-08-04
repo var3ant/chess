@@ -26,7 +26,7 @@ public class Took extends Move {
     public void privateMove(Figure figure, ChessField field) {
         field.remove(figure.getX(), figure.getY());
         if (field.set(x, y, figure) == null) {
-            throw new Error("");//HARDCODE:
+            throw new Error("attempt to take piece by coordinate (" + x + ", " + y + ")" + " where there is no piece");//ASSERT
         }
     }
 

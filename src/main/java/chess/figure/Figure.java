@@ -87,7 +87,7 @@ public abstract class Figure {
         }
 
         if (king == null) {
-            throw new Error();//HARDCODE:
+            throw new Error("King is dead?!");//ASSERT
         }
 
         return isCellBeaten(field, king.getX(), king.getY());

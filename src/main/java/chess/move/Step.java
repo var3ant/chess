@@ -27,7 +27,7 @@ public class Step extends Move {
         field.remove(figure.getX(), figure.getY());
 
         if (field.set(x, y, figure) != null) {
-            throw new Error("");//HARDCODE:
+            throw new Error("attempt to step to the position where is piece is already located");//ASSERT
         }
     }
 

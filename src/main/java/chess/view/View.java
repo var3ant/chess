@@ -6,6 +6,7 @@ import java.awt.*;
 public class View extends JPanel {
     public View() {
         setLayout(new GridBagLayout());
+        setFocusable(false);
         var c = new GridBagConstraints();
         c.fill = GridBagConstraints.BOTH;
         add(new FieldView(), c);

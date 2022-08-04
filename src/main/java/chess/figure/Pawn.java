@@ -2,9 +2,11 @@ package chess.figure;
 
 import chess.ChessField;
 import chess.Coord;
+import chess.Properties;
 import chess.move.Move;
 import chess.move.Step;
 import chess.move.Took;
+import chess.view.FieldView;
 import org.imgscalr.Scalr;
 
 import javax.imageio.ImageIO;
@@ -29,9 +31,9 @@ public class Pawn extends Figure {
 
     @Override
     public Image getImage() throws IOException {
-        String path = "E:\\projects\\hobby\\java\\chess\\src\\main\\resources\\figures\\";
+        String path = Properties.pathToFigures;
         BufferedImage im = ImageIO.read(new File(path + getColor().colorPrefix + "_" + imageName));
-        return Scalr.resize(im, 80);//HARDCODE:cell size
+        return Scalr.resize(im, FieldView.cellSize);
     }
 
 

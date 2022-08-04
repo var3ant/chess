@@ -106,16 +106,4 @@ public class ChessField {
             }
         }
     }
-
-//    public void create(int x, int y, FigureColor color, Class<? extends Figure> figureClass) {
-//        try {
-//            set(x, y, (Figure) figureClass.getDeclaredConstructors()[0].newInstance(color, x, y));
-//        } catch (InstantiationException e) {
-//            e.printStackTrace();
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        } catch (InvocationTargetException e) {
-//            e.printStackTrace();
-//        }
-//    }
 }
