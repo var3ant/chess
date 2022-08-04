@@ -129,7 +129,7 @@ public class Model {
             selectNextPlayer();
             var moves = getSelectedPlayer().getMoves();
             if (moves.values().stream().allMatch(List::isEmpty)) {
-                whoWon = selectedPlayer.myColor.another();
+                whoWon = getSelectedPlayer().myColor.another();
             }
             fieldView.repaint();
         }

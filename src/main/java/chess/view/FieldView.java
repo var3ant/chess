@@ -64,7 +64,9 @@ public class FieldView extends Component {
         }
 
         if (model.whoWon() != null) {
-            g.setColor(Color.ORANGE);
+            g.setColor(Color.WHITE);
+            g.fillRect(panelSize / 2, panelSize / 2 - 10, 52, 10);
+            g.setColor(Color.BLUE);
             g.drawString(model.whoWon().toString() + " win", panelSize / 2, panelSize / 2);
         }
     }
