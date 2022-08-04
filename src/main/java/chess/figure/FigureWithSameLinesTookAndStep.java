@@ -3,7 +3,8 @@ package chess.figure;
 import chess.ChessField;
 import chess.Coord;
 import chess.move.Move;
-import chess.move.MoveType;
+import chess.move.Step;
+import chess.move.Took;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,13 +24,13 @@ public abstract class FigureWithSameLinesTookAndStep extends Figure {
         List<Move> actualMoves = new LinkedList<>();
         for (List<Coord> line : lines) {
             for (Coord coord : line) {
-                if (field.get(coord.x, coord.y) != null) {
+                if (field.containsFigure(coord.x, coord.y)) {
                     if (field.get(coord.x, coord.y).getColor() != this.getColor()) {
-                        actualMoves.add(new Move(coord.x, coord.y, MoveType.Took));
+                        actualMoves.add(new Took(coord.x, coord.y));
                     }
                     break;
                 }
-                actualMoves.add(new Move(coord.x, coord.y, MoveType.Step));
+                actualMoves.add(new Step(coord.x, coord.y));
             }
         }
         return actualMoves;

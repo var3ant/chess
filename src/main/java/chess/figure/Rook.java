@@ -26,7 +26,7 @@ public class Rook extends FigureWithSameLinesTookAndStep {
     public Image getImage() throws IOException {
         String path = "E:\\projects\\hobby\\java\\chess\\src\\main\\resources\\figures\\";
         BufferedImage im = ImageIO.read(new File(path + getColor().colorPrefix + "_" + imageName));
-        return Scalr.resize(im, 80);//TODO:cell size
+        return Scalr.resize(im, 80);//HARDCODE:cell size
     }
 
 
@@ -99,4 +99,7 @@ public class Rook extends FigureWithSameLinesTookAndStep {
         this.isFirstStep = ((Rook) figureWhoMove).isFirstStep;
     }
 
+    public boolean isFirstStep() {
+        return isFirstStep;
+    }
 }

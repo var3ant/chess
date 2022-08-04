@@ -12,13 +12,13 @@ public enum FigureColor {
         this.direction = direction;
     }
 
-    public static FigureColor another(FigureColor color) {
-        if (color == Black) {
+    public FigureColor another() {
+        if (this == Black) {
             return White;
         }
-        if (color == White) {
+        if (this == White) {
             return Black;
         }
-        throw new Error("T_T");//TODO:
+        throw new Error("T_T");//HARDCODE:
     }
 }

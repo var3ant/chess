@@ -2,6 +2,8 @@ package chess.figure;
 
 import chess.ChessField;
 import chess.Coord;
+import chess.move.Castling;
+import chess.move.Move;
 import org.imgscalr.Scalr;
 
 import javax.imageio.ImageIO;
@@ -9,6 +11,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -20,14 +23,55 @@ public class King extends FigureWithSameLinesTookAndStep {
     public King(FigureColor color, int x, int y) {
         super(color, x, y);
     }
+
     public King(FigureColor color) {
         super(color);
     }
+
+    @Override
+    public List<Move> getAvailableMoves(ChessField field) {
+        var result = super.getAvailableMoves(field);
+        if (isFirstStep) {
+            var rooks = field.findAll(Rook.class, getColor());
+            for (Rook rook : rooks) {
+                if (rook.isFirstStep()) {
+                    List<Coord> coords = new ArrayList<>();
+                    coords.add(new Coord(getX(), getY()));
+                    coords.add(new Coord(rook.getX(), rook.getY()));
+                    if (rook.getY() == getX()) {
+                        continue;
+                    }
+                    int direction = (getX() - rook.getX()) / Math.abs(getX() - rook.getX());
+                    boolean isSellsFree = true;
+                    for (int x = getX() - direction; x != rook.getX(); x -= direction) {
+                        if (x < 0 || x >= field.size) {
+                            break;
+                        }
+                        if (field.containsFigure(x, getY())) {
+                            isSellsFree = false;
+                            break;
+                        }
+                        coords.add(new Coord(x, getY()));
+                    }
+                    if (!isSellsFree) {
+                        continue;
+                    }
+                    if (isCellsBeaten(field, coords)) {
+                        continue;
+                    }
+
+                    result.add(new Castling(new Coord(getX() - direction * 2, getY()), direction, new Coord(rook.getX(), rook.getY())));
+                }
+            }
+        }
+        return result;
+    }
+
     @Override
     public Image getImage() throws IOException {
         String path = "E:\\projects\\hobby\\java\\chess\\src\\main\\resources\\figures\\";
         BufferedImage im = ImageIO.read(new File(path + getColor().colorPrefix + "_" + imageName));
-        return Scalr.resize(im, 80);//TODO:cell size
+        return Scalr.resize(im, 80);//HARDCODE:cell size
     }
 
 

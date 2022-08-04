@@ -3,8 +3,6 @@ package chess.figure;
 import chess.ChessField;
 import chess.Coord;
 import chess.move.Move;
-import chess.move.MoveBackup;
-import chess.move.MoveType;
 
 import java.awt.*;
 import java.io.IOException;
@@ -14,7 +12,7 @@ import java.util.List;
 public abstract class Figure {
     private int x = -1;
     private int y = -1;
-    private FigureColor color;
+    private final FigureColor color;
 
     public Figure(FigureColor color) {
         this.color = color;
@@ -68,13 +66,13 @@ public abstract class Figure {
         List<Move> availableMoves = getAvailableMoves(field);
         List<Move> toReturn = new LinkedList<>();
         for (Move move : availableMoves) {
-            //TODO: SAVE BACKUP FOR EVERY TYPE OF MOVE NOT ONLY STEP AND TOOK!!!
-            MoveBackup backup = move.type.doBackup(this, field, move);
-            move.type.doWork(this, field, move);
-            if (!hasThreatOfLoosingKing(field)) {
+            ChessField sandboxField = field.copy();
+            Figure myCopy = sandboxField.get(this.getX(),this.getY());
+            move.move(myCopy, sandboxField);
+            if (!hasThreatOfLoosingKing(sandboxField)) {
                 toReturn.add(move);
             }
-            backup.load(this, field, move);
+            field.checkForBugs();
         }
         return toReturn;
     }
@@ -89,7 +87,7 @@ public abstract class Figure {
         }
 
         if (king == null) {
-            throw new Error();//TODO:
+            throw new Error();//HARDCODE:
         }
 
         return isCellBeaten(field, king.getX(), king.getY());
@@ -97,9 +95,13 @@ public abstract class Figure {
 
 
     private boolean isCellBeaten(ChessField field, int x, int y) {
-        for (Figure figure : field.getFigures(FigureColor.another(this.getColor()))) {
+        return isCellsBeaten(field, List.of(new Coord(x, y)));
+    }
+
+    protected boolean isCellsBeaten(ChessField field, List<Coord> cells) {
+        for (Figure figure : field.getFigures(this.getColor().another())) {
             for (Move move : figure.getAvailableMoves(field)) {
-                if (x == move.x && y == move.y) {
+                if (cells.stream().anyMatch((coord) -> coord.x == move.x && coord.y == move.y)) {
                     return true;
                 }
             }
@@ -112,5 +114,14 @@ public abstract class Figure {
     public void reInit(Figure figureWhoMove) {
         this.x = figureWhoMove.x;
         this.y = figureWhoMove.y;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Figure)) {
+            return false;
+        }
+        Figure eqFigure = (Figure) obj;
+        return x == eqFigure.x && y == eqFigure.y;
     }
 }

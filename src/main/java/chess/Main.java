@@ -1,5 +1,8 @@
 package chess;
 
+import chess.view.FieldView;
+import chess.view.View;
+
 import javax.swing.*;
 
 public class Main {

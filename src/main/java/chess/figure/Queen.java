@@ -25,7 +25,7 @@ public class Queen extends FigureWithSameLinesTookAndStep {
     public Image getImage() throws IOException {
         String path = "E:\\projects\\hobby\\java\\chess\\src\\main\\resources\\figures\\";
         BufferedImage im = ImageIO.read(new File(path + getColor().colorPrefix + "_" + imageName));
-        return Scalr.resize(im, 80);//TODO:cell size
+        return Scalr.resize(im, 80);//HARDCODE:cell size
     }
 
 
@@ -66,7 +66,7 @@ public class Queen extends FigureWithSameLinesTookAndStep {
         newX--;
         newY--;
         while (newX >= 0 && newY >= 0) {
-            downRight.add(new Coord(newX, newY));
+            upLeft.add(new Coord(newX, newY));
             newX--;
             newY--;
         }
@@ -79,7 +79,7 @@ public class Queen extends FigureWithSameLinesTookAndStep {
         newY--;
 
         while (newX < field.size && newY >= 0) {
-            downLeft.add(new Coord(newX, newY));
+            upRight.add(new Coord(newX, newY));
             newX++;
             newY--;
         }

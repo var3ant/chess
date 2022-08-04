@@ -3,8 +3,8 @@ package chess.figure;
 import chess.ChessField;
 import chess.Coord;
 import chess.move.Move;
-import chess.move.MoveBackup;
-import chess.move.MoveType;
+import chess.move.Step;
+import chess.move.Took;
 import org.imgscalr.Scalr;
 
 import javax.imageio.ImageIO;
@@ -22,14 +22,16 @@ public class Pawn extends Figure {
     public Pawn(FigureColor color, int x, int y) {
         super(color, x, y);
     }
+
     public Pawn(FigureColor color) {
         super(color);
     }
+
     @Override
     public Image getImage() throws IOException {
         String path = "E:\\projects\\hobby\\java\\chess\\src\\main\\resources\\figures\\";
         BufferedImage im = ImageIO.read(new File(path + getColor().colorPrefix + "_" + imageName));
-        return Scalr.resize(im, 80);//TODO:cell size
+        return Scalr.resize(im, 80);//HARDCODE:cell size
     }
 
 
@@ -37,17 +39,19 @@ public class Pawn extends Figure {
     public List<List<Coord>> getMovingLines(ChessField field) {
 
         List<List<Coord>> result = new LinkedList<>();
+        List<Coord> line = new LinkedList<>();
         int newY = getY() + getColor().direction;
         if (newY >= 0 && newY < field.size) {
-            result.add(List.of(new Coord(getX(), newY)));
-        }
-        //TODO: long step for a pawn
-        if (isFirstStep) {
-            newY = getY() + getColor().direction + getColor().direction;
-            if (newY >= 0 && newY < field.size) {
-                result.add(List.of(new Coord(getX(), newY)));
+            line.add(new Coord(getX(), newY));
+            result.add(line);
+            if (isFirstStep) {
+                newY = getY() + getColor().direction + getColor().direction;
+                if (newY >= 0 && newY < field.size) {
+                    line.add(new Coord(getX(), newY));
+                }
             }
         }
+
         return result;
     }
 
@@ -58,7 +62,7 @@ public class Pawn extends Figure {
             Figure figure;
             int newX = getX() - 1;
             if (newX >= 0) {
-                figure = field.get(newX, newY);
+                figure = field.getNullable(newX, newY);
                 if (figure != null && figure.getColor() != getColor()) {
                     result.add(new Coord(newX, newY));
                 }
@@ -66,7 +70,7 @@ public class Pawn extends Figure {
 
             newX = getX() + 1;
             if (newX < field.size) {
-                figure = field.get(newX, newY);
+                figure = field.getNullable(newX, newY);
                 if (figure != null && figure.getColor() != getColor()) {
                     result.add(new Coord(newX, newY));
                 }
@@ -82,14 +86,14 @@ public class Pawn extends Figure {
         List<Move> actualMoves = new LinkedList<>();
         for (List<Coord> line : lines) {
             for (Coord coord : line) {
-                if (field.get(coord.x, coord.y) != null) {
+                if (field.getNullable(coord.x, coord.y) != null) {
                     break;
                 }
-                actualMoves.add(new Move(coord, MoveType.Step));
+                actualMoves.add(new Step(coord));
             }
         }
         for (Coord tookStep : getTookSteps(field)) {
-            actualMoves.add(new Move(tookStep, MoveType.Took));
+            actualMoves.add(new Took(tookStep));
         }
         return actualMoves;
     }
@@ -101,7 +105,7 @@ public class Pawn extends Figure {
         isFirstStep = false;
     }
 
-    //TODO: copy and reInit dependent on each other. Pattern save/load should fix it.
+    //FIXME: copy and reInit dependent on each other. Pattern save/load should fix it.
     @Override
     public Figure copy() {
         Pawn copy = new Pawn(getColor(), getX(), getY());

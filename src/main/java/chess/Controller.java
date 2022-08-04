@@ -1,22 +1,24 @@
 package chess;
 
+import chess.view.FieldView;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class Controller implements MouseListener {
     private Model model;
-    private View view;
+    private FieldView fieldView;
 
-    public Controller(Model model, View view) {
+    public Controller(Model model, FieldView fieldView) {
         this.model = model;
-        this.view = view;
+        this.fieldView = fieldView;
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
-        model.click(x / view.cellSize,y / view.cellSize);
+        model.click(x / fieldView.cellSize,y / fieldView.cellSize);
     }
 
     @Override

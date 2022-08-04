@@ -1,19 +1,20 @@
-package chess;
+package chess.view;
 
+import chess.Controller;
+import chess.Model;
 import chess.figure.Figure;
 import chess.move.Move;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.List;
 
-public class View extends Component {
-    final int cellSize = 80;
-    final int panelSize = 640;
+public class FieldView extends Component {
+    public final int cellSize = 80;
+    public final int panelSize = 640;
     //PlayerModel model = new PlayerModel(panelSize / cellSize, this, FigureColor.White);
     Model model = new Model(panelSize / cellSize, this);
 
-    public View() {
+    public FieldView() {
         setPreferredSize(new Dimension(panelSize, panelSize));
         setMinimumSize(new Dimension(panelSize, panelSize));
         setMaximumSize(new Dimension(panelSize, panelSize));
@@ -25,6 +26,7 @@ public class View extends Component {
     public void paint(Graphics g) {
         super.paint(g);
         requestFocus();
+
         int fieldSize = panelSize / cellSize;
         Color light = new Color(124, 76, 62);
         Color dark = new Color(81, 42, 42);
@@ -40,16 +42,17 @@ public class View extends Component {
                 }
             }
         }
+
         if (model.getSelectedFigure() != null) {
             for (Move move : model.getSelectedFigure().getMovesNotInCheck(model.field)) {
-                g.setColor(move.type.color);
+                g.setColor(move.getColor());
                 g.fillRect(move.x * cellSize, move.y * cellSize, cellSize, cellSize);
             }
         }
 
         for (int i = 0; i < fieldSize; i++) {
             for (int j = 0; j < fieldSize; j++) {
-                Figure figure = model.field.get(i, j);
+                Figure figure = model.field.getNullable(i, j);
                 if (figure != null) {
                     try {
                         g.drawImage(figure.getImage(), i * cellSize, j * cellSize, null);
@@ -58,6 +61,11 @@ public class View extends Component {
                     }
                 }
             }
+        }
+
+        if (model.whoWon() != null) {
+            g.setColor(Color.ORANGE);
+            g.drawString(model.whoWon().toString() + " win", panelSize / 2, panelSize / 2);
         }
     }
 
