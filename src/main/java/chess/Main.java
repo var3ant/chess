@@ -1,6 +1,7 @@
 package chess;
 
 import chess.adapter.OfflineMouseAdapter;
+import chess.exception.InvalidArgumentsException;
 import chess.field.FieldReader;
 import chess.figure.FigureColor;
 import chess.playermodel.OfflinePlayerModel;
@@ -12,6 +13,7 @@ import chess.view.View;
 import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,12 +22,34 @@ public class Main {
 
         var fieldView = new FieldView();
         var view = new View(fieldView);
-
-        switch (args.length) {
-            case 0 -> offline(fieldView);
-            case 1 -> onlineServer(fieldView, Integer.parseInt(args[0]));
-            case 2 -> onlineClient(fieldView, args[0], Integer.parseInt(args[1]));
-            default -> throw new IllegalArgumentException("invalid args");
+        try {
+            switch (args.length) {
+                case 0 -> offline(fieldView);
+                case 1 -> {
+                    try {
+                        int port = Integer.parseInt(args[0]);
+                        onlineServer(fieldView, port);
+                    } catch (NumberFormatException e) {
+                        throw new InvalidArgumentsException();
+                    }
+                }
+                case 2 -> {
+                    try {
+                        int port = Integer.parseInt(args[1]);
+                        onlineClient(fieldView, args[0], port);
+                    } catch (NumberFormatException e) {
+                        throw new InvalidArgumentsException();
+                    }
+                }
+                default -> throw new InvalidArgumentsException();
+            }
+        } catch (InvalidArgumentsException e) {
+            System.out.println("Invalid arguments:");
+            System.out.println("there are 3 options for arguments:");
+            System.out.println("1) Offline game: no arguments");
+            System.out.println("1) Online game host: port");
+            System.out.println("1) Online game client: ip port");
+            return;
         }
 
         JFrame frame = new JFrame();
