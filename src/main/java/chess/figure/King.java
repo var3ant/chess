@@ -14,7 +14,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -71,7 +70,7 @@ public class King extends FigureWithSameLinesTookAndStep {
 
     @Override
     public Image getImage() throws IOException {
-        String path = Properties.pathToFigures;
+        String path = Properties.PATH_TO_FIGURES;
         BufferedImage im = ImageIO.read(new File(path + getColor().colorPrefix + "_" + imageName));
         return Scalr.resize(im, FieldView.cellSize);
     }

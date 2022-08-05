@@ -2,6 +2,8 @@ package chess.view;
 
 import chess.Controller;
 import chess.Model;
+import chess.Properties;
+import chess.adapter.OfflineMouseAdapter;
 import chess.figure.Figure;
 import chess.move.Move;
 
@@ -9,17 +11,16 @@ import java.awt.*;
 import java.io.IOException;
 
 public class FieldView extends Component {
-    public static final int cellSize = 80;
-    public final int panelSize = 640;
-    //PlayerModel model = new PlayerModel(panelSize / cellSize, this, FigureColor.White);
-    Model model = new Model(panelSize / cellSize, this);
+    public static final int cellSize = Properties.CELL_SIZE;
+    public final int panelSize = Properties.PANEL_SIZE;
+    private Model model;
 
-    public FieldView() {
+    public FieldView() throws IOException {
         setPreferredSize(new Dimension(panelSize, panelSize));
         setMinimumSize(new Dimension(panelSize, panelSize));
         setMaximumSize(new Dimension(panelSize, panelSize));
         setFocusable(true);
-        addMouseListener(new Controller(model, this));
+        addMouseListener(new Controller(new OfflineMouseAdapter(model), this));//TODO: model == null =/
     }
 
     @Override
@@ -72,4 +73,8 @@ public class FieldView extends Component {
     }
 
 
+    public void setModel(Model model) {
+        this.model = model;
+
+    }
 }

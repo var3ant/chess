@@ -2,6 +2,8 @@ package chess;
 
 import chess.figure.*;
 import chess.move.Move;
+import chess.playermodel.OfflinePlayerModel;
+import chess.playermodel.PlayerModel;
 import chess.view.FieldView;
 
 import java.util.List;
@@ -13,15 +15,12 @@ public class Model {
     private int selectedPlayer = 0;
     private FigureColor whoWon = null;
 
-    public Model(int fieldSize, FieldView fieldView) {
+    public Model(int fieldSize, FieldView fieldView, PlayerModel[] players) {
         this.fieldView = fieldView;
         this.field = new ChessField(fieldSize);
         initDefaultField();
 //        initDebugField();
-        players = new PlayerModel[]{
-                new PlayerModel(FigureColor.White),
-                new PlayerModel(FigureColor.Black)
-        };
+        this.players = players;
         getSelectedPlayer().calcMoves(field);
     }
 
@@ -103,46 +102,25 @@ public class Model {
         field.set(7, 1, new Pawn(FigureColor.Black));
     }
 
-    //smells:
-    public void click(int x, int y) {
+    public void doMove(PlayerModel playerModel, int figureX, int figureY, Move move) {
+        if (!isThisPlayerMoveNow(playerModel)) {
+            return;
+        }
         if (whoWon != null) {
             return;
         }
-        PlayerModel selectedPlayer = getSelectedPlayer();
-        System.out.println(x + " " + y);
-        Figure figure = field.getNullable(x, y);
-
-        if (figure != null && figure.getColor() == selectedPlayer.myColor) {
-            selectedPlayer.selectedFigure = figure;
-            fieldView.repaint();
-            return;
+        move.move(field.get(figureX, figureY), field);
+        selectNextPlayer();
+        getSelectedPlayer().notificationMoveWasHappened(figureX, figureY, move);
+        var moves = getSelectedPlayer().getMoves();
+        if (moves.values().stream().allMatch(List::isEmpty)) {
+            whoWon = getSelectedPlayer().myColor.another();
         }
-
-        if (selectedPlayer.selectedFigure == null) {
-            return;
-        }
-
-        Move move = selectedPlayer.findMoveIfAvailable(selectedPlayer.selectedFigure, x, y);
-        if (move != null) {
-            move.move(selectedPlayer.selectedFigure, field);
-            selectedPlayer.selectedFigure = null;
-            selectNextPlayer();
-            var moves = getSelectedPlayer().getMoves();
-            if (moves.values().stream().allMatch(List::isEmpty)) {
-                whoWon = getSelectedPlayer().myColor.another();
-            }
-            fieldView.repaint();
-        }
-
-        if (figure == null) {
-            selectedPlayer.selectedFigure = null;
-            fieldView.repaint();
-            return;
-        }
+        fieldView.repaint();
     }
 
     public Figure getSelectedFigure() {
-        return players[selectedPlayer].selectedFigure;
+        return players[selectedPlayer].getSelectedFigure();
     }
 
     public PlayerModel getSelectedPlayer() {
@@ -157,5 +135,17 @@ public class Model {
 
     public FigureColor whoWon() {
         return whoWon;
+    }
+
+    public Figure getFigure(int x, int y) {
+        return field.getNullable(x, y);
+    }
+
+    public void notificationSelectedFigureChanged(PlayerModel playerModel) {
+        fieldView.repaint();
+    }
+
+    public boolean isThisPlayerMoveNow(PlayerModel playerModel) {
+        return playerModel == getSelectedPlayer();
     }
 }

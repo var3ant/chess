@@ -26,7 +26,7 @@ public class Rook extends FigureWithSameLinesTookAndStep {
     }
     @Override
     public Image getImage() throws IOException {
-        String path = Properties.pathToFigures;
+        String path = Properties.PATH_TO_FIGURES;
         BufferedImage im = ImageIO.read(new File(path + getColor().colorPrefix + "_" + imageName));
         return Scalr.resize(im, FieldView.cellSize);
     }

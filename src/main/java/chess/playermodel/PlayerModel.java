@@ -1,5 +1,7 @@
-package chess;
+package chess.playermodel;
 
+import chess.ChessField;
+import chess.Model;
 import chess.figure.Figure;
 import chess.figure.FigureColor;
 import chess.move.Move;
@@ -8,12 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PlayerModel {
-    public Figure selectedFigure;
-    public final FigureColor myColor;
+public abstract class PlayerModel {
     private final Map<Figure, List<Move>> moves = new HashMap<>();
+    public final FigureColor myColor;
+    protected Model model;
 
-    public PlayerModel(FigureColor myColor) {
+    protected PlayerModel(FigureColor myColor) {
         this.myColor = myColor;
     }
 
@@ -29,7 +31,20 @@ public class PlayerModel {
         return moves;
     }
 
+    public Figure getSelectedFigure() {
+        return null;
+    }
+
     public Move findMoveIfAvailable(Figure selectedFigure, int x, int y) {
         return moves.get(selectedFigure).stream().filter(f -> f.x == x && f.y == y).findFirst().orElse(null);
     }
+
+    public void notificationMoveWasHappened(int figureX, int figureY, Move move) {
+
+    }
+
+    public void setModel(Model model) {
+        this.model = model;
+    }
+
 }
