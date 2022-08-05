@@ -1,7 +1,6 @@
 package chess.move;
 
-import chess.ChessField;
-import chess.Coord;
+import chess.field.ChessField;
 import chess.figure.Figure;
 
 import java.awt.*;
@@ -18,8 +17,8 @@ public class Took extends Move {
         super(x, y);
     }
 
-    public Took(Coord coord) {
-        super(coord);
+    public Took(Position position) {
+        super(position);
     }
 
     @Override

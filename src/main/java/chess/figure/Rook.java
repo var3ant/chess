@@ -1,7 +1,7 @@
 package chess.figure;
 
-import chess.ChessField;
-import chess.Coord;
+import chess.field.ChessField;
+import chess.move.Position;
 import chess.Properties;
 import chess.view.FieldView;
 import org.imgscalr.Scalr;
@@ -21,9 +21,16 @@ public class Rook extends FigureWithSameLinesTookAndStep {
     public Rook(FigureColor color, int x, int y) {
         super(color, x, y);
     }
+
     public Rook(FigureColor color) {
         super(color);
     }
+
+    public Rook(FigureColor color, boolean isFirstStep) {
+        this(color);
+        this.isFirstStep = isFirstStep;
+    }
+
     @Override
     public Image getImage() throws IOException {
         String path = Properties.PATH_TO_FIGURES;
@@ -33,47 +40,47 @@ public class Rook extends FigureWithSameLinesTookAndStep {
 
 
     @Override
-    public List<List<Coord>> getMovingLines(ChessField field) {
-        List<Coord> horizontalRight = new LinkedList<>();
+    public List<List<Position>> getMovingLines(ChessField field) {
+        List<Position> horizontalRight = new LinkedList<>();
         int newX = this.getX();
         int newY = this.getY();
 
         newX++;
         while (newX < field.size) {
-            horizontalRight.add(new Coord(newX, newY));
+            horizontalRight.add(new Position(newX, newY));
             newX++;
         }
 
 
-        List<Coord> horizontalLeft = new LinkedList<>();
+        List<Position> horizontalLeft = new LinkedList<>();
         newX = this.getX();
         newX--;
         while (newX >= 0) {
-            horizontalLeft.add(new Coord(newX, newY));
+            horizontalLeft.add(new Position(newX, newY));
             newX--;
         }
 
 
-        List<Coord> verticalUp = new LinkedList<>();
+        List<Position> verticalUp = new LinkedList<>();
         newX = this.getX();
         newY = this.getY();
         newY--;
         while (newY >= 0) {
-            verticalUp.add(new Coord(newX, newY));
+            verticalUp.add(new Position(newX, newY));
             newY--;
         }
 
 
-        List<Coord> verticalDown = new LinkedList<>();
+        List<Position> verticalDown = new LinkedList<>();
         newY = this.getY();
         newY++;
         while (newY < field.size) {
-            verticalDown.add(new Coord(newX, newY));
+            verticalDown.add(new Position(newX, newY));
             newY++;
         }
 
 
-        List<List<Coord>> result = new LinkedList<>();
+        List<List<Position>> result = new LinkedList<>();
         result.add(horizontalRight);
         result.add(horizontalLeft);
         result.add(verticalUp);

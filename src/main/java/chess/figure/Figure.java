@@ -1,7 +1,7 @@
 package chess.figure;
 
-import chess.ChessField;
-import chess.Coord;
+import chess.field.ChessField;
+import chess.move.Position;
 import chess.move.Move;
 
 import java.awt.*;
@@ -38,10 +38,10 @@ public abstract class Figure {
         return y;
     }
 
-    public abstract List<List<Coord>> getMovingLines(ChessField field);
+    public abstract List<List<Position>> getMovingLines(ChessField field);
 
 
-    public abstract List<Move> getAvailableMoves(ChessField field);
+    public abstract List<Move> getAvailableMoves(ChessField field, boolean withCastling);
 
     public Move findMoveIfAvailable(ChessField field, int x, int y) {
         for (Move move : getMovesNotInCheck(field)) {
@@ -63,11 +63,11 @@ public abstract class Figure {
     }
 
     public List<Move> getMovesNotInCheck(ChessField field) {
-        List<Move> availableMoves = getAvailableMoves(field);
+        List<Move> availableMoves = getAvailableMoves(field, true);
         List<Move> toReturn = new LinkedList<>();
         for (Move move : availableMoves) {
             ChessField sandboxField = field.copy();
-            Figure myCopy = sandboxField.get(this.getX(),this.getY());
+            Figure myCopy = sandboxField.get(this.getX(), this.getY());
             move.move(myCopy, sandboxField);
             if (!hasThreatOfLoosingKing(sandboxField)) {
                 toReturn.add(move);
@@ -95,12 +95,13 @@ public abstract class Figure {
 
 
     private boolean isCellBeaten(ChessField field, int x, int y) {
-        return isCellsBeaten(field, List.of(new Coord(x, y)));
+        return isCellsBeaten(field, List.of(new Position(x, y)));
     }
 
-    protected boolean isCellsBeaten(ChessField field, List<Coord> cells) {
+    protected boolean isCellsBeaten(ChessField field, List<Position> cells) {
+        System.out.println("isCellsBeaten: " + this + ", cells" + cells);
         for (Figure figure : field.getFigures(this.getColor().another())) {
-            for (Move move : figure.getAvailableMoves(field)) {
+            for (Move move : figure.getAvailableMoves(field, false)) {//FIXME: figure king
                 if (cells.stream().anyMatch((coord) -> coord.x == move.x && coord.y == move.y)) {
                     return true;
                 }
@@ -123,5 +124,10 @@ public abstract class Figure {
         }
         Figure eqFigure = (Figure) obj;
         return x == eqFigure.x && y == eqFigure.y;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + x + ", " + y + ")";
     }
 }

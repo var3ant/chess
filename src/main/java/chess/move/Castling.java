@@ -1,7 +1,6 @@
 package chess.move;
 
-import chess.ChessField;
-import chess.Coord;
+import chess.field.ChessField;
 import chess.figure.Figure;
 import chess.figure.Rook;
 
@@ -9,7 +8,7 @@ import java.awt.*;
 
 public class Castling extends Move {
     private final int direction;
-    private final Coord rookCoord;
+    private final Position rookPosition;
 
     private static final Color color = new Color(255, 100, 255, 100);
 
@@ -18,16 +17,16 @@ public class Castling extends Move {
         return color;
     }
 
-    public Castling(int x, int y, int direction, Coord rookCoord) {
+    public Castling(int x, int y, int direction, Position rookPosition) {
         super(x, y);
         this.direction = direction;
-        this.rookCoord = rookCoord;
+        this.rookPosition = rookPosition;
     }
 
-    public Castling(Coord coord, int direction, Coord rookCoord) {
-        super(coord);
+    public Castling(Position position, int direction, Position rookPosition) {
+        super(position);
         this.direction = direction;
-        this.rookCoord = rookCoord;
+        this.rookPosition = rookPosition;
     }
 
     @Override
@@ -38,7 +37,7 @@ public class Castling extends Move {
             throw new Error("attempt to castle by King to the position where is piece is already located");//ASSERT
         }
 
-        Rook rook = (Rook) field.remove(rookCoord.x, rookCoord.y);
+        Rook rook = (Rook) field.remove(rookPosition.x, rookPosition.y);
 
 
         if (field.set(x + direction, y, rook) != null) {

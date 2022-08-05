@@ -1,7 +1,7 @@
 package chess.figure;
 
-import chess.ChessField;
-import chess.Coord;
+import chess.field.ChessField;
+import chess.move.Position;
 import chess.Properties;
 import chess.move.Castling;
 import chess.move.Move;
@@ -29,39 +29,46 @@ public class King extends FigureWithSameLinesTookAndStep {
         super(color);
     }
 
-    @Override
-    public List<Move> getAvailableMoves(ChessField field) {
-        var result = super.getAvailableMoves(field);
-        if (isFirstStep) {
-            var rooks = field.findAll(Rook.class, getColor());
-            for (Rook rook : rooks) {
-                if (rook.isFirstStep()) {
-                    List<Coord> coords = new ArrayList<>();
-                    coords.add(new Coord(getX(), getY()));
-                    coords.add(new Coord(rook.getX(), rook.getY()));
-                    if (rook.getY() == getX()) {
-                        continue;
-                    }
-                    int direction = (getX() - rook.getX()) / Math.abs(getX() - rook.getX());
-                    boolean isSellsFree = true;
-                    for (int x = getX() - direction; x != rook.getX(); x -= direction) {
-                        if (x < 0 || x >= field.size) {
-                            break;
-                        }
-                        if (field.containsFigure(x, getY())) {
-                            isSellsFree = false;
-                            break;
-                        }
-                        coords.add(new Coord(x, getY()));
-                    }
-                    if (!isSellsFree) {
-                        continue;
-                    }
-                    if (isCellsBeaten(field, coords)) {
-                        continue;
-                    }
+    public King(FigureColor color, boolean isFirstStep) {
+        this(color);
+        this.isFirstStep = isFirstStep;
+    }
 
-                    result.add(new Castling(new Coord(getX() - direction * 2, getY()), direction, new Coord(rook.getX(), rook.getY())));
+    @Override
+    public List<Move> getAvailableMoves(ChessField field, boolean withCastling) {
+        var result = super.getAvailableMoves(field, withCastling);
+        if(withCastling) {
+            if (isFirstStep) {
+                var rooks = field.findAll(Rook.class, getColor());
+                for (Rook rook : rooks) {
+                    if (rook.isFirstStep()) {
+                        List<Position> positions = new ArrayList<>();
+                        positions.add(new Position(getX(), getY()));
+                        positions.add(new Position(rook.getX(), rook.getY()));
+                        if (rook.getY() == getX()) {
+                            continue;
+                        }
+                        int direction = (getX() - rook.getX()) / Math.abs(getX() - rook.getX());
+                        boolean isSellsFree = true;
+                        for (int x = getX() - direction; x != rook.getX(); x -= direction) {
+                            if (x < 0 || x >= field.size) {
+                                break;
+                            }
+                            if (field.containsFigure(x, getY())) {
+                                isSellsFree = false;
+                                break;
+                            }
+                            positions.add(new Position(x, getY()));
+                        }
+                        if (!isSellsFree) {
+                            continue;
+                        }
+                        if (isCellsBeaten(field, positions)) {
+                            continue;
+                        }
+
+                        result.add(new Castling(new Position(getX() - direction * 2, getY()), direction, new Position(rook.getX(), rook.getY())));
+                    }
                 }
             }
         }
@@ -77,16 +84,16 @@ public class King extends FigureWithSameLinesTookAndStep {
 
 
     @Override
-    public List<List<Coord>> getMovingLines(ChessField field) {
+    public List<List<Position>> getMovingLines(ChessField field) {
         return Stream.of(
-                new Coord(getX(), getY() - 1),
-                new Coord(getX() + 1, getY() - 1),
-                new Coord(getX() + 1, getY()),
-                new Coord(getX() + 1, getY() + 1),
-                new Coord(getX(), getY() + 1),
-                new Coord(getX() - 1, getY() + 1),
-                new Coord(getX() - 1, getY()),
-                new Coord(getX() - 1, getY() - 1)
+                new Position(getX(), getY() - 1),
+                new Position(getX() + 1, getY() - 1),
+                new Position(getX() + 1, getY()),
+                new Position(getX() + 1, getY() + 1),
+                new Position(getX(), getY() + 1),
+                new Position(getX() - 1, getY() + 1),
+                new Position(getX() - 1, getY()),
+                new Position(getX() - 1, getY() - 1)
         ).filter((coord) ->
                 coord.x >= 0
                         && coord.x < field.size
@@ -114,4 +121,8 @@ public class King extends FigureWithSameLinesTookAndStep {
         this.isFirstStep = ((King) figureWhoMove).isFirstStep;
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + " " + getColor().name() + " king";
+    }
 }

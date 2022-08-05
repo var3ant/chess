@@ -1,6 +1,5 @@
 package chess.playermodel;
 
-import chess.Model;
 import chess.dto.MoveDto;
 import chess.figure.FigureColor;
 import chess.move.Move;
@@ -20,7 +19,7 @@ public class OnlinePlayerModel extends PlayerModel {
 
     public OnlinePlayerModel(FigureColor myColor, String ip, int port) throws IOException {
         super(myColor);
-        socket = new Socket(ip, port);
+        socket = new Socket(ip, port);//TODO: не падать если сервер еще не запущен.
         start();
     }
 
@@ -34,21 +33,27 @@ public class OnlinePlayerModel extends PlayerModel {
         new Thread(() -> {
             try {
                 ObjectInputStream stream = new ObjectInputStream(socket.getInputStream());
-
                 while (!socket.isClosed()) {
                     MoveDto moveDto = (MoveDto) stream.readObject();
+                    System.out.println("move was read: " + moveDto);
                     model.doMove(this, moveDto.figureX, moveDto.figureY, moveDto.move);
                 }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
-        });
+        }).start();
         sender = new Thread(() -> {
             try {
                 ObjectOutputStream stream = new ObjectOutputStream(socket.getOutputStream());
                 while (!socket.isClosed()) {
                     try {
-                        stream.writeObject(messagesToSend.poll());//TODO: можно лимит времени поставить и проверять.
+                        MoveDto moveDto = messagesToSend.poll();
+                        if (moveDto == null) {
+                            continue;
+                        }
+                        System.out.println("move to send: " + moveDto);
+                        stream.writeObject(moveDto);
+                        System.out.println("move was send");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -57,6 +62,7 @@ public class OnlinePlayerModel extends PlayerModel {
                 e.printStackTrace();
             }
         });
+        sender.start();
     }
 
     @Override

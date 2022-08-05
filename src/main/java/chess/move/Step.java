@@ -1,7 +1,6 @@
 package chess.move;
 
-import chess.ChessField;
-import chess.Coord;
+import chess.field.ChessField;
 import chess.figure.Figure;
 
 import java.awt.*;
@@ -18,8 +17,8 @@ public class Step extends Move {
         super(x, y);
     }
 
-    public Step(Coord coord) {
-        super(coord);
+    public Step(Position position) {
+        super(position);
     }
 
     @Override

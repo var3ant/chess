@@ -1,7 +1,7 @@
 package chess.figure;
 
-import chess.ChessField;
-import chess.Coord;
+import chess.field.ChessField;
+import chess.move.Position;
 import chess.Properties;
 import chess.move.Move;
 import chess.move.Step;
@@ -29,6 +29,11 @@ public class Pawn extends Figure {
         super(color);
     }
 
+    public Pawn(FigureColor color, boolean isFirstStep) {
+        this(color);
+        this.isFirstStep = isFirstStep;
+    }
+
     @Override
     public Image getImage() throws IOException {
         String path = Properties.PATH_TO_FIGURES;
@@ -38,18 +43,18 @@ public class Pawn extends Figure {
 
 
     @Override
-    public List<List<Coord>> getMovingLines(ChessField field) {
+    public List<List<Position>> getMovingLines(ChessField field) {
 
-        List<List<Coord>> result = new LinkedList<>();
-        List<Coord> line = new LinkedList<>();
+        List<List<Position>> result = new LinkedList<>();
+        List<Position> line = new LinkedList<>();
         int newY = getY() + getColor().direction;
         if (newY >= 0 && newY < field.size) {
-            line.add(new Coord(getX(), newY));
+            line.add(new Position(getX(), newY));
             result.add(line);
             if (isFirstStep) {
                 newY = getY() + getColor().direction + getColor().direction;
                 if (newY >= 0 && newY < field.size) {
-                    line.add(new Coord(getX(), newY));
+                    line.add(new Position(getX(), newY));
                 }
             }
         }
@@ -57,8 +62,8 @@ public class Pawn extends Figure {
         return result;
     }
 
-    public List<Coord> getTookSteps(ChessField field) {
-        List<Coord> result = new LinkedList<>();
+    public List<Position> getTookSteps(ChessField field) {
+        List<Position> result = new LinkedList<>();
         int newY = getY() + getColor().direction;
         if (newY >= 0 && newY < field.size) {
             Figure figure;
@@ -66,7 +71,7 @@ public class Pawn extends Figure {
             if (newX >= 0) {
                 figure = field.getNullable(newX, newY);
                 if (figure != null && figure.getColor() != getColor()) {
-                    result.add(new Coord(newX, newY));
+                    result.add(new Position(newX, newY));
                 }
             }
 
@@ -74,7 +79,7 @@ public class Pawn extends Figure {
             if (newX < field.size) {
                 figure = field.getNullable(newX, newY);
                 if (figure != null && figure.getColor() != getColor()) {
-                    result.add(new Coord(newX, newY));
+                    result.add(new Position(newX, newY));
                 }
             }
         }
@@ -83,18 +88,18 @@ public class Pawn extends Figure {
     }
 
     @Override
-    public List<Move> getAvailableMoves(ChessField field) {
-        List<List<Coord>> lines = getMovingLines(field);
+    public List<Move> getAvailableMoves(ChessField field, boolean withCastling) {
+        List<List<Position>> lines = getMovingLines(field);
         List<Move> actualMoves = new LinkedList<>();
-        for (List<Coord> line : lines) {
-            for (Coord coord : line) {
-                if (field.getNullable(coord.x, coord.y) != null) {
+        for (List<Position> line : lines) {
+            for (Position position : line) {
+                if (field.getNullable(position.x, position.y) != null) {
                     break;
                 }
-                actualMoves.add(new Step(coord));
+                actualMoves.add(new Step(position));
             }
         }
-        for (Coord tookStep : getTookSteps(field)) {
+        for (Position tookStep : getTookSteps(field)) {
             actualMoves.add(new Took(tookStep));
         }
         return actualMoves;

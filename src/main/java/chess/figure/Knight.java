@@ -1,7 +1,7 @@
 package chess.figure;
 
-import chess.ChessField;
-import chess.Coord;
+import chess.field.ChessField;
+import chess.move.Position;
 import chess.Properties;
 import chess.view.FieldView;
 import org.imgscalr.Scalr;
@@ -32,16 +32,16 @@ public class Knight extends FigureWithSameLinesTookAndStep {
 
 
     @Override
-    public List<List<Coord>> getMovingLines(ChessField field) {
+    public List<List<Position>> getMovingLines(ChessField field) {
         return Stream.of(
-                new Coord(getX() + 2, getY() - 1),
-                new Coord(getX() + 1, getY() - 2),
-                new Coord(getX() - 2, getY() - 1),
-                new Coord(getX() - 1, getY() - 2),
-                new Coord(getX() + 2, getY() + 1),
-                new Coord(getX() + 1, getY() + 2),
-                new Coord(getX() - 2, getY() + 1),
-                new Coord(getX() - 1, getY() + 2)
+                new Position(getX() + 2, getY() - 1),
+                new Position(getX() + 1, getY() - 2),
+                new Position(getX() - 2, getY() - 1),
+                new Position(getX() - 1, getY() - 2),
+                new Position(getX() + 2, getY() + 1),
+                new Position(getX() + 1, getY() + 2),
+                new Position(getX() - 2, getY() + 1),
+                new Position(getX() - 1, getY() + 2)
         ).filter((coord) ->
                 coord.x >= 0
                         && coord.x < field.size

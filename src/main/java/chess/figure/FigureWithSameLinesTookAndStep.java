@@ -1,7 +1,7 @@
 package chess.figure;
 
-import chess.ChessField;
-import chess.Coord;
+import chess.field.ChessField;
+import chess.move.Position;
 import chess.move.Move;
 import chess.move.Step;
 import chess.move.Took;
@@ -19,18 +19,18 @@ public abstract class FigureWithSameLinesTookAndStep extends Figure {
     }
 
     @Override
-    public List<Move> getAvailableMoves(ChessField field) {
-        List<List<Coord>> lines = getMovingLines(field);
+    public List<Move> getAvailableMoves(ChessField field, boolean withCastling) {
+        List<List<Position>> lines = getMovingLines(field);
         List<Move> actualMoves = new LinkedList<>();
-        for (List<Coord> line : lines) {
-            for (Coord coord : line) {
-                if (field.containsFigure(coord.x, coord.y)) {
-                    if (field.get(coord.x, coord.y).getColor() != this.getColor()) {
-                        actualMoves.add(new Took(coord.x, coord.y));
+        for (List<Position> line : lines) {
+            for (Position position : line) {
+                if (field.containsFigure(position.x, position.y)) {
+                    if (field.get(position.x, position.y).getColor() != this.getColor()) {
+                        actualMoves.add(new Took(position.x, position.y));
                     }
                     break;
                 }
-                actualMoves.add(new Step(coord.x, coord.y));
+                actualMoves.add(new Step(position.x, position.y));
             }
         }
         return actualMoves;

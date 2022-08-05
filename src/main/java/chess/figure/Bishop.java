@@ -1,7 +1,7 @@
 package chess.figure;
 
-import chess.ChessField;
-import chess.Coord;
+import chess.field.ChessField;
+import chess.move.Position;
 import chess.Properties;
 import chess.view.FieldView;
 import org.imgscalr.Scalr;
@@ -32,60 +32,60 @@ public class Bishop extends FigureWithSameLinesTookAndStep {
 
 
     @Override
-    public List<List<Coord>> getMovingLines(ChessField field) {
-        List<Coord> downRight = new LinkedList<>();
+    public List<List<Position>> getMovingLines(ChessField field) {
+        List<Position> downRight = new LinkedList<>();
         int newX = this.getX();
         int newY = this.getY();
 
         newX++;
         newY++;
         while (newX < field.size && newY < field.size) {
-            downRight.add(new Coord(newX, newY));
+            downRight.add(new Position(newX, newY));
             newX++;
             newY++;
         }
 
 
-        List<Coord> downLeft = new LinkedList<>();
+        List<Position> downLeft = new LinkedList<>();
         newX = this.getX();
         newY = this.getY();
         newX--;
         newY++;
 
         while (newX >= 0  && newY < field.size) {
-            downLeft.add(new Coord(newX, newY));
+            downLeft.add(new Position(newX, newY));
             newX--;
             newY++;
         }
 
 
-        List<Coord> upLeft = new LinkedList<>();
+        List<Position> upLeft = new LinkedList<>();
         newX = this.getX();
         newY = this.getY();
         newX--;
         newY--;
         while (newX >= 0 && newY >= 0) {
-            upLeft.add(new Coord(newX, newY));
+            upLeft.add(new Position(newX, newY));
             newX--;
             newY--;
         }
 
 
-        List<Coord> upRight = new LinkedList<>();
+        List<Position> upRight = new LinkedList<>();
         newX = this.getX();
         newY = this.getY();
         newX++;
         newY--;
 
         while (newX < field.size && newY >= 0) {
-            upRight.add(new Coord(newX, newY));
+            upRight.add(new Position(newX, newY));
             newX++;
             newY--;
         }
 
 
 
-        List<List<Coord>> result = new LinkedList<>();
+        List<List<Position>> result = new LinkedList<>();
         result.add(upRight);
         result.add(upLeft);
         result.add(downRight);

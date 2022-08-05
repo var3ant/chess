@@ -1,6 +1,6 @@
 package chess.playermodel;
 
-import chess.ChessField;
+import chess.field.ChessField;
 import chess.Model;
 import chess.figure.Figure;
 import chess.figure.FigureColor;

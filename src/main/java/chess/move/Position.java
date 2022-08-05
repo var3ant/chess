@@ -1,10 +1,10 @@
-package chess;
+package chess.move;
 
-public class Coord {
+public class Position {
     public int x;
     public int y;
 
-    public Coord(int x, int y) {
+    public Position(int x, int y) {
         this.x = x;
         this.y = y;
     }

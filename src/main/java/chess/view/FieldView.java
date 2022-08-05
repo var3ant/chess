@@ -20,7 +20,11 @@ public class FieldView extends Component {
         setMinimumSize(new Dimension(panelSize, panelSize));
         setMaximumSize(new Dimension(panelSize, panelSize));
         setFocusable(true);
-        addMouseListener(new Controller(new OfflineMouseAdapter(model), this));//TODO: model == null =/
+    }
+
+
+    public void addOfflineListener(OfflineMouseAdapter offlineMouseAdapter) {
+        addMouseListener(new Controller(offlineMouseAdapter, this));
     }
 
     @Override

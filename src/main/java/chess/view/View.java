@@ -1,14 +1,11 @@
 package chess.view;
 
-import chess.Model;
-import chess.ModelFactory;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
 public class View extends JPanel {
-    public View(FieldView fieldView) throws IOException {
+    public View(FieldView fieldView) {
         setLayout(new GridBagLayout());
         setFocusable(false);
         var c = new GridBagConstraints();

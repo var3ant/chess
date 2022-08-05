@@ -1,66 +1,35 @@
 package chess;
 
+import chess.field.ChessField;
 import chess.figure.*;
 import chess.move.Move;
-import chess.playermodel.OfflinePlayerModel;
 import chess.playermodel.PlayerModel;
 import chess.view.FieldView;
 
 import java.util.List;
 
 public class Model {
-    private final PlayerModel[] players;
+    private final List<? extends PlayerModel> players;
     public ChessField field;
     private final FieldView fieldView;
     private int selectedPlayer = 0;
     private FigureColor whoWon = null;
 
-    public Model(int fieldSize, FieldView fieldView, PlayerModel[] players) {
+    public Model(ChessField chessField, FieldView fieldView, List<? extends PlayerModel> players) {
         this.fieldView = fieldView;
-        this.field = new ChessField(fieldSize);
-        initDefaultField();
-//        initDebugField();
         this.players = players;
+
+        this.field = chessField;
         getSelectedPlayer().calcMoves(field);
     }
 
-    private void initDebugField() {
-        field.set(0, 7, new Rook(FigureColor.White));
-        field.set(1, 7, new Knight(FigureColor.White));
-        field.set(2, 7, new Bishop(FigureColor.White));
-        field.set(3, 7, new Queen(FigureColor.White));
-        field.set(4, 7, new King(FigureColor.White));
-        field.set(5, 7, new Bishop(FigureColor.White));
-        field.set(6, 7, new Knight(FigureColor.White));
-        field.set(7, 7, new Rook(FigureColor.White));
+    public Model(int fieldSize, FieldView fieldView, List<? extends PlayerModel> players) {
+        this.fieldView = fieldView;
+        this.players = players;
 
-        field.set(0, 6, new Pawn(FigureColor.White));
-        field.set(1, 6, new Pawn(FigureColor.White));
-        field.set(2, 6, new Pawn(FigureColor.White));
-        field.set(3, 6, new Pawn(FigureColor.White));
-        field.set(4, 6, new Pawn(FigureColor.White));
-        field.set(5, 6, new Pawn(FigureColor.White));
-        field.set(6, 6, new Pawn(FigureColor.White));
-        field.set(7, 6, new Pawn(FigureColor.White));
-
-
-        field.set(0, 0, new Rook(FigureColor.Black));
-        field.set(1, 0, new Knight(FigureColor.Black));
-        field.set(2, 0, new Bishop(FigureColor.Black));
-        field.set(3, 0, new Queen(FigureColor.Black));
-        field.set(4, 0, new King(FigureColor.Black));
-        field.set(5, 0, new Bishop(FigureColor.Black));
-        field.set(6, 0, new Knight(FigureColor.Black));
-        field.set(7, 0, new Rook(FigureColor.Black));
-
-        field.set(0, 1, new Pawn(FigureColor.Black));
-        field.set(1, 1, new Pawn(FigureColor.Black));
-        field.set(2, 1, new Pawn(FigureColor.Black));
-        field.set(3, 1, new Pawn(FigureColor.Black));
-        field.set(4, 1, new Pawn(FigureColor.Black));
-        field.set(5, 1, new Pawn(FigureColor.Black));
-        field.set(6, 1, new Pawn(FigureColor.Black));
-        field.set(7, 1, new Pawn(FigureColor.Black));
+        this.field = new ChessField(fieldSize);
+        initDefaultField();
+        getSelectedPlayer().calcMoves(field);
     }
 
     private void initDefaultField() {
@@ -120,17 +89,18 @@ public class Model {
     }
 
     public Figure getSelectedFigure() {
-        return players[selectedPlayer].getSelectedFigure();
+        return players.get(selectedPlayer).getSelectedFigure();
     }
 
     public PlayerModel getSelectedPlayer() {
-        return players[selectedPlayer];
+        return players.get(selectedPlayer);
     }
 
     private void selectNextPlayer() {
         selectedPlayer = (selectedPlayer + 1) % 2;
         field.checkForBugs();
         getSelectedPlayer().calcMoves(field);
+        System.out.println("now its " + getSelectedPlayer().myColor.name() + " turn");
     }
 
     public FigureColor whoWon() {

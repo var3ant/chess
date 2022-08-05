@@ -1,4 +1,4 @@
-package chess;
+package chess.field;
 
 import chess.figure.Figure;
 import chess.figure.FigureColor;

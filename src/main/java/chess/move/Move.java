@@ -1,12 +1,12 @@
 package chess.move;
 
-import chess.ChessField;
-import chess.Coord;
+import chess.field.ChessField;
 import chess.figure.Figure;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public abstract class Move {
+public abstract class Move implements Serializable {
     public final int x;
     public final int y;
 
@@ -15,8 +15,8 @@ public abstract class Move {
         this.y = y;
     }
 
-    public Move(Coord coord) {
-        this(coord.x, coord.y);
+    public Move(Position position) {
+        this(position.x, position.y);
     }
 
 
