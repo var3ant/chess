@@ -9,6 +9,7 @@ import chess.move.Move;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.List;
 
 public class FieldView extends Component {
     public static final int cellSize = Properties.CELL_SIZE;
@@ -80,5 +81,16 @@ public class FieldView extends Component {
     public void setModel(Model model) {
         this.model = model;
 
+    }
+
+    public Figure selectFigure(List<Figure> figures) {
+        try {
+            PromotionDialog dialog = new PromotionDialog(View.getRef(), figures);//FIXME:getRef
+            dialog.setVisible(true);
+            return dialog.getSelectedFigure();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;//FIXME:!!!
     }
 }

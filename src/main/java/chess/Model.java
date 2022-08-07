@@ -3,9 +3,12 @@ package chess;
 import chess.field.ChessField;
 import chess.figure.*;
 import chess.move.Move;
+import chess.move.Promotion;
 import chess.playermodel.PlayerModel;
 import chess.view.FieldView;
+import chess.view.PromotionDialog;
 
+import java.io.IOException;
 import java.util.List;
 
 public class Model {
@@ -79,6 +82,7 @@ public class Model {
             return;
         }
         move.move(field.get(figureX, figureY), field);
+
         selectNextPlayer();
         getSelectedPlayer().notificationMoveWasHappened(figureX, figureY, move);
         var moves = getSelectedPlayer().getMoves();
@@ -117,5 +121,9 @@ public class Model {
 
     public boolean isThisPlayerMoveNow(PlayerModel playerModel) {
         return playerModel == getSelectedPlayer();
+    }
+
+    public Figure selectFigureForPromotion(FigureColor color) {
+            return fieldView.selectFigure(FactoryPromotionFigures.getFigures(color));
     }
 }

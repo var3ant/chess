@@ -3,6 +3,7 @@ package chess.playermodel;
 import chess.figure.Figure;
 import chess.figure.FigureColor;
 import chess.move.Move;
+import chess.move.Promotion;
 
 
 public class OfflinePlayerModel extends PlayerModel {
@@ -27,6 +28,14 @@ public class OfflinePlayerModel extends PlayerModel {
 
         Move move = findMoveIfAvailable(selectedFigure, x, y);
         if (move != null) {
+            if (move instanceof Promotion) {
+                Figure newFigureClass = model.selectFigureForPromotion(myColor);
+                if(newFigureClass != null) {
+                    ((Promotion) move).setPromotionFigure(newFigureClass.getClass());
+                } else {
+                    return;
+                }
+            }
             model.doMove(this, selectedFigure.getX(), selectedFigure.getY(), move);
             setSelectedFigure(null);
             return;

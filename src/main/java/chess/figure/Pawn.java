@@ -1,11 +1,8 @@
 package chess.figure;
 
 import chess.field.ChessField;
-import chess.move.Position;
+import chess.move.*;
 import chess.Properties;
-import chess.move.Move;
-import chess.move.Step;
-import chess.move.Took;
 import chess.view.FieldView;
 import org.imgscalr.Scalr;
 
@@ -16,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Pawn extends Figure {
     private static final String imageName = "pawn.png";
@@ -36,8 +34,7 @@ public class Pawn extends Figure {
 
     @Override
     public Image getImage() throws IOException {
-        String path = Properties.PATH_TO_FIGURES;
-        BufferedImage im = ImageIO.read(new File(path + getColor().colorPrefix + "_" + imageName));
+        BufferedImage im = super.loadImage(getColor().colorPrefix + "_" + imageName);
         return Scalr.resize(im, FieldView.cellSize);
     }
 
@@ -102,7 +99,20 @@ public class Pawn extends Figure {
         for (Position tookStep : getTookSteps(field)) {
             actualMoves.add(new Took(tookStep));
         }
-        return actualMoves;
+
+
+        return actualMoves.stream().map(move -> {
+            if (move.y == 0 || move.y == field.size - 1) {
+                Promotion promotion = new Promotion(move.x, move.y);
+                promotion.setPromotionFigure(Queen.class);
+                return promotion;
+            } else return move;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public void setPosition(int x, int y) {
+        super.setPosition(x, y);
     }
 
 

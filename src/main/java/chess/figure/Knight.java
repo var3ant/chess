@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Knight extends FigureWithSameLinesTookAndStep {
@@ -25,8 +26,7 @@ public class Knight extends FigureWithSameLinesTookAndStep {
     }
     @Override
     public Image getImage() throws IOException {
-        String path = Properties.PATH_TO_FIGURES;
-        BufferedImage im = ImageIO.read(new File(path + getColor().colorPrefix + "_" + imageName));
+        BufferedImage im = super.loadImage(getColor().colorPrefix + "_" + imageName);
         return Scalr.resize(im, FieldView.cellSize);
     }
 
@@ -49,7 +49,7 @@ public class Knight extends FigureWithSameLinesTookAndStep {
                         && coord.y < field.size
         ).map(coord ->
                 List.of(coord)
-        ).toList();
+        ).collect(Collectors.toList());
     }
 
 

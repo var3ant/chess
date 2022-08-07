@@ -1,10 +1,14 @@
 package chess.figure;
 
+import chess.Properties;
 import chess.field.ChessField;
 import chess.move.Position;
 import chess.move.Move;
+import chess.move.Promotion;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -99,7 +103,7 @@ public abstract class Figure {
     }
 
     protected boolean isCellsBeaten(ChessField field, List<Position> cells) {
-        System.out.println("isCellsBeaten: " + this + ", cells" + cells);
+//        System.out.println("isCellsBeaten: " + this + ", cells" + cells);
         for (Figure figure : field.getFigures(this.getColor().another())) {
             for (Move move : figure.getAvailableMoves(field, false)) {//FIXME: figure king
                 if (cells.stream().anyMatch((coord) -> coord.x == move.x && coord.y == move.y)) {
@@ -129,5 +133,10 @@ public abstract class Figure {
     @Override
     public String toString() {
         return "(" + x + ", " + y + ")";
+    }
+
+
+    protected BufferedImage loadImage(String name) throws IOException {
+        return ImageIO.read(ClassLoader.getSystemClassLoader().getResource(Properties.PATH_TO_FIGURES + name));
     }
 }

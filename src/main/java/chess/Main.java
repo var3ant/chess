@@ -2,46 +2,59 @@ package chess;
 
 import chess.adapter.OfflineMouseAdapter;
 import chess.exception.InvalidArgumentsException;
-import chess.field.FieldReader;
 import chess.figure.FigureColor;
 import chess.playermodel.OfflinePlayerModel;
 import chess.playermodel.OnlinePlayerModel;
 import chess.playermodel.PlayerModel;
-import chess.view.FieldView;
 import chess.view.View;
+import chess.view.menu.ConnectView;
+import chess.view.FieldView;
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
 
-public class Main {
-    public static void main(String[] args) throws IOException {
+import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
-        var fieldView = new FieldView();
-        var view = new View(fieldView);
+public class Main {
+    public static FieldView fieldView;
+    public static View view;
+    public static JFrame frame;
+
+    public static void main(String[] args) throws IOException {
+        frame = new JFrame();
+        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        fieldView = new FieldView();
+        view = new View(fieldView, frame);
+
+
         try {
             switch (args.length) {
-                case 0 -> offline(fieldView);
-                case 1 -> {
+                case 0:
+                    offline();
+                    break;
+                case 1: {
                     try {
                         int port = Integer.parseInt(args[0]);
-                        onlineServer(fieldView, port);
+                        onlineServer(port);
                     } catch (NumberFormatException e) {
                         throw new InvalidArgumentsException();
                     }
+                    break;
                 }
-                case 2 -> {
+                case 2: {
                     try {
                         int port = Integer.parseInt(args[1]);
-                        onlineClient(fieldView, args[0], port);
+                        onlineClient(args[0], port);
                     } catch (NumberFormatException e) {
                         throw new InvalidArgumentsException();
                     }
                 }
-                default -> throw new InvalidArgumentsException();
+                break;
+                default:
+                    throw new InvalidArgumentsException();
             }
         } catch (InvalidArgumentsException e) {
             System.out.println("Invalid arguments:");
@@ -52,7 +65,6 @@ public class Main {
             return;
         }
 
-        JFrame frame = new JFrame();
         frame.add(view);
         frame.pack();
         frame.setFocusable(false);
@@ -65,7 +77,7 @@ public class Main {
 //        return new Model(FieldReader.fieldFromFile("debug"), fieldView, players);
     }
 
-    public static void onlineServer(FieldView fieldView, int port) throws IOException {
+    public static void onlineServer(int port) throws IOException {
 
         OfflinePlayerModel offlinePlayerModel = new OfflinePlayerModel(FigureColor.White);
 
@@ -86,8 +98,7 @@ public class Main {
         fieldView.addOfflineListener(adapter);
     }
 
-    public static void onlineClient(FieldView fieldView, String ip, int port) throws IOException {
-
+    public static void onlineClient(String ip, int port) throws IOException {
         OfflinePlayerModel offlinePlayerModel = new OfflinePlayerModel(FigureColor.Black);
 
         List<PlayerModel> players = List.of(
@@ -107,7 +118,7 @@ public class Main {
         fieldView.addOfflineListener(adapter);
     }
 
-    public static void offline(FieldView fieldView) throws IOException {
+    public static void offline() throws FileNotFoundException {
 
         List<OfflinePlayerModel> players = List.of(
                 new OfflinePlayerModel(FigureColor.White),
