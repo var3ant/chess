@@ -54,16 +54,6 @@ public class FieldReader {
         }
         Figure f;
         switch (figure) {
-//            case 'R' -> f = new Rook(figureColor);
-//            case 'r' -> f = new Rook(figureColor, false);
-//            case 'k' -> f = new Knight(figureColor);
-//            case 'b' -> f = new Bishop(figureColor);
-//            case 'q' -> f = new Queen(figureColor);
-//            case 'C' -> f = new King(figureColor);
-//            case 'c' -> f = new King(figureColor, false);
-//            case 'P' -> f = new Pawn(figureColor);
-//            case 'p' -> f = new Pawn(figureColor, false);
-//            default -> throw new IllegalArgumentException("invalid figure: " + figure);
             case 'R':
                 f = new Rook(figureColor);
                 break;

@@ -1,4 +1,3 @@
 # TODO
-- refresh list of games
-- player left, someone won, surrendered, etc.
-- delete the game when player leaves from waiting screen 
+- player left, surrendered, etc.
+- delete the game when the game is over or players are leave

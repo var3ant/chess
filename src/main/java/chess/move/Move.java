@@ -20,7 +20,7 @@ public abstract class Move implements Serializable {
     }
 
 
-    abstract public void privateMove(Figure figure, ChessField field);
+    protected abstract void privateMove(Figure figure, ChessField field);
 
     public void move(Figure figure, ChessField field) {
         privateMove(figure, field);
